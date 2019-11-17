@@ -62,7 +62,7 @@ Browse for the 'libgdxgame' directory that you just cloned.
 If importing fails, you will have to delete 
     ``` (File->Delete) ``` the project from the workspace (uncheck "delete from disk" or you will have to re-clone it) before trying again.
 
-I've done this on a Macbook, a KSU lab machine, and a Windows computer. All the error's I've encountered are addressed by everything above. Hopefully you don't encounter any new ones. 
+I've done this on a Macbook, a KSU lab machine, and a Windows computer. All the errors I've encountered are addressed by everything above. Hopefully you don't encounter any new ones. 
 
 ## Run demo
 Right click the "desktop" project in the Package Explorer (left side of screen, use Quick Access if the pane got closed) Then ``` (Run as-> Java application) ```
