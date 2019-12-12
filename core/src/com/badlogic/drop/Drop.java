@@ -53,9 +53,8 @@ public class Drop extends ApplicationAdapter {
 	      
 	      // Create the Rectangle and specify its initial values
 	      // Put the bucket 20 pixels above the bottom edge of the screen
-	      // Center it horizontally
 	      bucket = new Rectangle();
-	      bucket.x = 800 / 2 - 64 / 2;
+	      bucket.x = 20;
 	      bucket.y = 20;
 	      bucket.width = 64;
 	      bucket.height = 64;
@@ -104,19 +103,19 @@ public class Drop extends ApplicationAdapter {
 		}
 		
 		// Need to take in keyboard input also!
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			bucket.x -= 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			bucket.y -= 200 * Gdx.graphics.getDeltaTime();
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			bucket.x += 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			bucket.y += 200 * Gdx.graphics.getDeltaTime();
 		}
 		
 		// Makes sure bucket stays within the screen limits!
-		if (bucket.x < 0) {
-			bucket.x = 0;
+		if (bucket.y < 0) {
+			bucket.y = 0;
 		}
-		if (bucket.x > 800 - 64) {
-			bucket.x = 800 - 64;
+		if (bucket.y > 400) {
+			bucket.y = 400;
 		}
 		
 	      
