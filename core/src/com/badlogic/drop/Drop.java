@@ -68,7 +68,7 @@ public class Drop extends ApplicationAdapter {
 	@Override
 	public void render () {
 		// Set the clear color to the color blue
-		Gdx.gl.glClearColor(1, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0.4f, 0.8f,1f, 0);
 		// Actually clears the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -133,8 +133,8 @@ public class Drop extends ApplicationAdapter {
 	      // raindrop from the array!
 	      for (Iterator<Rectangle> iter = raindrops.iterator(); iter.hasNext(); ) {
 	          Rectangle raindrop = iter.next();
-	          raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-	          if(raindrop.y + 64 < 0) {
+	          raindrop.x -= 200 * Gdx.graphics.getDeltaTime();
+	          if(raindrop.x == 0) {
 	        	  iter.remove();
 	          }
 	          if(raindrop.overlaps(bucket)) {
@@ -147,8 +147,8 @@ public class Drop extends ApplicationAdapter {
 	// Spawns a raindrop at a random x position
 	private void spawnRaindrop() {
 		Rectangle raindrop = new Rectangle();
-	    raindrop.x = MathUtils.random(0, 800-64);
-	    raindrop.y = 480;
+	    raindrop.y = MathUtils.random(0, 800-64);
+	    raindrop.x = 480;
 	    raindrop.width = 64;
 	    raindrop.height = 64;
 	    raindrops.add(raindrop);
