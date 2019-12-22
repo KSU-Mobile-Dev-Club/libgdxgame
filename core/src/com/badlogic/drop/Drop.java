@@ -25,7 +25,7 @@ public class Drop extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private BitmapFont font;
-	private Rectangle bucket;
+	private Rectangle bird;
 	private Vector3 touchPos;
 	//possible problem
 	private Array<Rectangle> raindrops;
@@ -38,7 +38,7 @@ public class Drop extends ApplicationAdapter {
 	public void create() {
 		// load the images for the droplet and the bucket, 64x64 pixels each
 	      dropImage = new Texture(Gdx.files.internal("droplet.png"));
-	      bucketImage = new Texture(Gdx.files.internal("bucket.png"));
+	      bucketImage = new Texture(Gdx.files.internal("yellowbird-midflap.png"));
 	      
 	      // load the drop sound effect and the rain background "music"
 	      dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
@@ -58,11 +58,12 @@ public class Drop extends ApplicationAdapter {
 	      
 	      // Create the Rectangle and specify its initial values
 	      // Put the bucket 20 pixels above the bottom edge of the screen
-	      bucket = new Rectangle();
-	      bucket.x = 20;
-	      bucket.y = 20;
-	      bucket.width = 64;
-	      bucket.height = 64;
+	      // TODO: modify this rectangle to properly fit the bird
+	      bird = new Rectangle();
+	      bird.x = 20;
+	      bird.y = 20;
+	      bird.width = 64;
+	      bird.height = 64;
 	      
 	      // set score to 0
 	      score = 0;
@@ -90,7 +91,7 @@ public class Drop extends ApplicationAdapter {
 		// Record all drawing commands between begin() and end()
 		// Speeds up rendering a ton
 		batch.begin();
-		batch.draw(bucketImage, bucket.x, bucket.y);
+		batch.draw(bucketImage, bird.x, bird.y);
 		font.draw(batch, Long.toString(score), 200, 200);
 		for(Rectangle raindrop: raindrops) {
 	    	batch.draw(dropImage, raindrop.x, raindrop.y);
@@ -108,23 +109,23 @@ public class Drop extends ApplicationAdapter {
 			// transforms these coordinates to our camera's coordinate system
 			camera.unproject(touchPos);
 			// change the position of the bucket to be centered around the touch/mouse coordinates
-			bucket.x = touchPos.x - 64 / 2;
+			bird.x = touchPos.x - 64 / 2;
 		}
 		
 		// Need to take in keyboard input also!
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			bucket.y -= 200 * Gdx.graphics.getDeltaTime();
+			bird.y -= 200 * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			bucket.y += 200 * Gdx.graphics.getDeltaTime();
+			bird.y += 200 * Gdx.graphics.getDeltaTime();
 		}
 		
 		// Makes sure bucket stays within the screen limits!
-		if (bucket.y < 0) {
-			bucket.y = 0;
+		if (bird.y < 0) {
+			bird.y = 0;
 		}
-		if (bucket.y > 400) {
-			bucket.y = 400;
+		if (bird.y > 400) {
+			bird.y = 400;
 		}
 		
 	      
@@ -146,7 +147,7 @@ public class Drop extends ApplicationAdapter {
 	          if(raindrop.x == 0) {
 	        	  iter.remove();
 	          }
-	          if(raindrop.overlaps(bucket)) {
+	          if(raindrop.overlaps(bird)) {
 	        	  score+=1;
 		    	  dropSound.play();
 		    	  iter.remove();
