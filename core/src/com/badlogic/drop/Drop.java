@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -23,11 +24,14 @@ public class Drop extends ApplicationAdapter {
 	private Music rainMusic;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
+	private BitmapFont font;
 	private Rectangle bucket;
 	private Vector3 touchPos;
 	//possible problem
 	private Array<Rectangle> raindrops;
 	private long lastDropTime;
+	
+	private long score;
 	
 	
 	@Override
@@ -50,6 +54,7 @@ public class Drop extends ApplicationAdapter {
 	      camera.setToOrtho(false, 800, 480);
 	      
 	      batch = new SpriteBatch();
+	      font = new BitmapFont();
 	      
 	      // Create the Rectangle and specify its initial values
 	      // Put the bucket 20 pixels above the bottom edge of the screen
@@ -58,6 +63,9 @@ public class Drop extends ApplicationAdapter {
 	      bucket.y = 20;
 	      bucket.width = 64;
 	      bucket.height = 64;
+	      
+	      // set score to 0
+	      score = 0;
 	      
 	      // Spawn our first raindrop
 	      raindrops = new Array<Rectangle>();
@@ -83,6 +91,7 @@ public class Drop extends ApplicationAdapter {
 		// Speeds up rendering a ton
 		batch.begin();
 		batch.draw(bucketImage, bucket.x, bucket.y);
+		font.draw(batch, Long.toString(score), 200, 200);
 		for(Rectangle raindrop: raindrops) {
 	    	batch.draw(dropImage, raindrop.x, raindrop.y);
 	    }
@@ -138,6 +147,7 @@ public class Drop extends ApplicationAdapter {
 	        	  iter.remove();
 	          }
 	          if(raindrop.overlaps(bucket)) {
+	        	  score+=1;
 		    	  dropSound.play();
 		    	  iter.remove();
 		      }
