@@ -16,10 +16,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Drop extends ApplicationAdapter {
-	private Texture dropImage;
-	private Texture bucketImage;
+	private Texture pipeImage;
+	private Texture birdImage;
 	private Sound dropSound;
 	private Music rainMusic;
 	private OrthographicCamera camera;
@@ -28,7 +29,7 @@ public class Drop extends ApplicationAdapter {
 	private Rectangle bird;
 	private Vector3 touchPos;
 	//possible problem
-	private Array<Rectangle> raindrops;
+	private Array<Rectangle> pipes;
 	private long lastDropTime;
 	
 	private long score;
@@ -36,9 +37,11 @@ public class Drop extends ApplicationAdapter {
 	
 	@Override
 	public void create() {
-		// load the images for the droplet and the bucket, 64x64 pixels each
-	      dropImage = new Texture(Gdx.files.internal("droplet.png"));
-	      bucketImage = new Texture(Gdx.files.internal("yellowbird-midflap.png"));
+		  // load the images for the pipe and the bird,
+		  // the bird is 34x24 pixels
+		  // the pipe is 52x320 pixels
+	      pipeImage = new Texture(Gdx.files.internal("pipe-green.png"));
+	      birdImage = new Texture(Gdx.files.internal("yellowbird-midflap.png"));
 	      
 	      // load the drop sound effect and the rain background "music"
 	      dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
@@ -57,20 +60,19 @@ public class Drop extends ApplicationAdapter {
 	      font = new BitmapFont();
 	      
 	      // Create the Rectangle and specify its initial values
-	      // Put the bucket 20 pixels above the bottom edge of the screen
-	      // TODO: modify this rectangle to properly fit the bird
+	      // Put the bird 20 pixels above the bottom edge of the screen
 	      bird = new Rectangle();
 	      bird.x = 20;
 	      bird.y = 20;
-	      bird.width = 64;
-	      bird.height = 64;
+	      bird.width = 34;
+	      bird.height = 24;
 	      
 	      // set score to 0
 	      score = 0;
 	      
 	      // Spawn our first raindrop
-	      raindrops = new Array<Rectangle>();
-	      spawnRaindrop();
+	      pipes = new Array<Rectangle>();
+	      spawnPipe();
 	      
 	}
 
@@ -91,10 +93,10 @@ public class Drop extends ApplicationAdapter {
 		// Record all drawing commands between begin() and end()
 		// Speeds up rendering a ton
 		batch.begin();
-		batch.draw(bucketImage, bird.x, bird.y);
+		batch.draw(birdImage, bird.x, bird.y);
 		font.draw(batch, Long.toString(score), 200, 200);
-		for(Rectangle raindrop: raindrops) {
-	    	batch.draw(dropImage, raindrop.x, raindrop.y);
+		for(Rectangle raindrop: pipes) {
+	    	batch.draw(pipeImage, raindrop.x, raindrop.y);
 	    }
 		batch.end();
 		
@@ -132,7 +134,7 @@ public class Drop extends ApplicationAdapter {
 	      //Checks how much time has passed since we spawned a new raindrop, and
 	      // creates one if necessary
 	      if (TimeUtils.nanoTime() - lastDropTime > 1000000000) {
-	    	  spawnRaindrop();
+	    	  spawnPipe();
 	      }
 	      
 	      // In order to make the raindrops move!
@@ -141,7 +143,7 @@ public class Drop extends ApplicationAdapter {
 	      // if from the array!
 	      // If the raindrop hits the bucket, play drop sound and remove the
 	      // raindrop from the array!
-	      for (Iterator<Rectangle> iter = raindrops.iterator(); iter.hasNext(); ) {
+	      for (Iterator<Rectangle> iter = pipes.iterator(); iter.hasNext(); ) {
 	          Rectangle raindrop = iter.next();
 	          raindrop.x -= 200 * Gdx.graphics.getDeltaTime();
 	          if(raindrop.x == 0) {
@@ -155,23 +157,24 @@ public class Drop extends ApplicationAdapter {
 	       }
 	}
 	
-	// Spawns a raindrop at a random x position
-	private void spawnRaindrop() {
-		Rectangle raindrop = new Rectangle();
-	    raindrop.y = MathUtils.random(0, 800-64);
-	    raindrop.x = 480;
-	    raindrop.width = 64;
-	    raindrop.height = 64;
-	    raindrops.add(raindrop);
-	    // Time used to decide whether to spawn a new drop or not (yet)
+	// Spawns a pipe at the rightmost corner of the screen, at a random y position.
+	private void spawnPipe() {
+		Rectangle pipe = new Rectangle();
+		// random.nextInt(max - min) + min; 
+	    pipe.y = new Random().nextInt(0 - (-300)) + (-300) ;
+	    pipe.x = 810;
+	    pipe.width = 52;
+	    pipe.height = 320;
+	    pipes.add(pipe);
+	    // Time used to decide whether to spawn a new pipe or not (yet)
 	    lastDropTime = TimeUtils.nanoTime();
 	}
 	
 	// Clean up after the application is closed!
 	@Override
 	public void dispose () {
-		dropImage.dispose();
-	    bucketImage.dispose();
+		pipeImage.dispose();
+	    birdImage.dispose();
 	    dropSound.dispose();
 	    rainMusic.dispose();
 	    batch.dispose();
