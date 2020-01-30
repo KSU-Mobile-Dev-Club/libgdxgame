@@ -33,6 +33,7 @@ public class Drop extends ApplicationAdapter {
 	private long lastDropTime;
 	
 	private long score;
+	private long testVariable;
 	
 	
 	@Override
