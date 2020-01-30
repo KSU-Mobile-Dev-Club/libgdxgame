@@ -34,6 +34,7 @@ public class Drop extends ApplicationAdapter {
 	
 	private long score;
 	private long testVariable;
+	private long testVariable2;
 	
 	
 	@Override
