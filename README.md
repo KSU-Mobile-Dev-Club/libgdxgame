@@ -51,6 +51,8 @@ other people can now run `git pull` and pull down your previous commit.
 If you'r ever in Vim world, and don't know what the hell is going on, hit ESC.
 Then type `:q` and you'll get your terminal back :).
 
+If you'd like to learn how to use Vim (it's really not as complicated as people make it out to be, trust me), run `vimtutor` on the command line. 
+
 
 # How to clone
 
