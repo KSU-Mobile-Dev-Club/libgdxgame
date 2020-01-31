@@ -1,3 +1,57 @@
+# Unix and Git stuff
+Some of you guys requested a small cheat sheet of common linux and git commands. Here's a short list of the essentials. 
+## Navigation
+`cd`**change directory**
+
+`mkdir`**make directory**
+- `mkdir newFolder`
+- `cd newFolder`
+
+`ls` **list files/directories**
+
+`pwd` **print working directory** "show me where I am"
+
+`cp` **copy** 
+- `cp Drop.java DropCopy.java`
+
+`mv` **move file/folder**
+ - `mkdir bird_pictures`
+ - `mv FlappyBird.png bird_pictures\flappybird.png`
+ - *notice how this can also be used to rename files*
+ 
+USE TAB. Tab will autocomplete filenames for you, so you don't have to type everything. 
+
+Try to wrap your head around the similarity between cp and mv. They're essentially the same command, except with mv, you don't leave a duplicate copy laying around. 
+
+There are tons of other usefull commands, but these are the bare essentails. 
+
+## Git
+First of all, you can't really run any git commands until you're in a folder that is tracked by Git. In other words, use the above navigation commands to find your Git project on your computer. You'll know when you get there because git bash will start displaying text like (MASTER), and `git status` will actually have something to tell you. 
+
+`git status` is your friend. It tells you the status of your **local** copy of the Git project, which can be a lot of things. Instead of attempting to explain all the possible scenarios, I'll provide a really simple example of a workflow. 
+
+**let's pretend you changed some files, saved them, and are ready to publish your changes...**
+
+` git status` will show you what has changed. Right now, the changes should be in red, because you haven't *added* them for commit.
+
+`git add <file>` or `git add .` (the . will add everything in this folder)
+
+`git status` will now show the changes in green. Any subsequent changes you create will still be red until you manually add them with `git add`
+
+`git commit -m "Explain what you changed here, so your teammates will know."`
+Now your change is *commited*. 
+
+`git log` will show you a history of everyone's commit. you should see yours at the top
+
+`git push` will take your commit and push it online. Git may ask you to sign in. 
+
+other people can now run `git pull` and pull down your previous commit.
+
+## Vim world
+If you'r ever in Vim world, and don't know what the hell is going on, hit ESC.
+Then type `:q` and you'll get your terminal back :).
+
+
 # How to clone
 
 ## Requirements
