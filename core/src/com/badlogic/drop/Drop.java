@@ -33,8 +33,6 @@ public class Drop extends ApplicationAdapter {
 	private long lastDropTime;
 	
 	private long score;
-	private long testVariable;
-	private long testVariable2;
 	
 	
 	@Override
@@ -72,7 +70,7 @@ public class Drop extends ApplicationAdapter {
 	      // set score to 0
 	      score = 0;
 	      
-	      // Spawn our first raindrop
+	      // Spawn our first pipe
 	      pipes = new Array<Rectangle>();
 	      spawnPipe();
 	      
@@ -106,13 +104,13 @@ public class Drop extends ApplicationAdapter {
 		if (Gdx.input.isTouched()) {
 			// three dimensional vector
 			// will contain the touch/mouse coordinates in the coordinate system our
-			// bucket lives in
+			// bird lives in
 			touchPos = new Vector3();
 			// return the current touch/mouse position
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			// transforms these coordinates to our camera's coordinate system
 			camera.unproject(touchPos);
-			// change the position of the bucket to be centered around the touch/mouse coordinates
+			// change the position of the bird to be centered around the touch/mouse coordinates
 			bird.x = touchPos.x - 64 / 2;
 		}
 		
@@ -133,25 +131,25 @@ public class Drop extends ApplicationAdapter {
 		}
 		
 	      
-	      //Checks how much time has passed since we spawned a new raindrop, and
+	      //Checks how much time has passed since we spawned a new pipe, and
 	      // creates one if necessary
 	      if (TimeUtils.nanoTime() - lastDropTime > 1000000000) {
 	    	  spawnPipe();
 	      }
 	      
-	      // In order to make the raindrops move!
+	      // In order to make the pipes move!
 	      // Move at a constant speed of 200 pixels/units per second
-	      // If the raindrop is beneath the bottom edge of the screen, remove
-	      // if from the array!
-	      // If the raindrop hits the bucket, play drop sound and remove the
-	      // raindrop from the array!
+	      // If the pipe is past the left edge of the screen, remove
+	      // it from the array!
+	      // If the pipe hits the bird, play drop sound and remove the
+	      // pipe from the array!
 	      for (Iterator<Rectangle> iter = pipes.iterator(); iter.hasNext(); ) {
-	          Rectangle raindrop = iter.next();
-	          raindrop.x -= 200 * Gdx.graphics.getDeltaTime();
-	          if(raindrop.x == 0) {
+	          Rectangle pipe = iter.next();
+	          pipe.x -= 200 * Gdx.graphics.getDeltaTime();
+	          if(pipe.x == 0) {
 	        	  iter.remove();
 	          }
-	          if(raindrop.overlaps(bird)) {
+	          if(pipe.overlaps(bird)) {
 	        	  score+=1;
 		    	  dropSound.play();
 		    	  iter.remove();
