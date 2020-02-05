@@ -94,7 +94,10 @@ public class Drop extends ApplicationAdapter {
 		// Speeds up rendering a ton
 		batch.begin();
 		batch.draw(birdImage, bird.x, bird.y);
-		font.draw(batch, Long.toString(score), 200, 200);
+		// Increases the size of font!
+		font.getData().setScale(2.5f);
+		// Draws the font itself
+		font.draw(batch, Long.toString(score), 25, 450);
 		for(Rectangle raindrop: pipes) {
 	    	batch.draw(pipeImage, raindrop.x, raindrop.y);
 	    }
