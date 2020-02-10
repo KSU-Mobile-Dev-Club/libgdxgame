@@ -30,6 +30,8 @@ public class Drop extends ApplicationAdapter {
 	private Vector3 touchPos;
 	//possible problem
 	private Array<Rectangle> pipes;
+	//test
+	private Array<Rectangle> collisionObject;
 	private long lastDropTime;
 	
 	private long score;
@@ -72,6 +74,7 @@ public class Drop extends ApplicationAdapter {
 	      
 	      // Spawn our first pipe
 	      pipes = new Array<Rectangle>();
+	      collisionObject = new Array<Rectangle>();
 	      spawnPipe();
 	      
 	}
@@ -101,6 +104,9 @@ public class Drop extends ApplicationAdapter {
 		for(Rectangle raindrop: pipes) {
 	    	batch.draw(pipeImage, raindrop.x, raindrop.y);
 	    }
+		for (Rectangle collision: collisionObject) {
+			batch.draw(pipeImage, collision.x, collision.y);	
+		}
 		batch.end();
 		
 		// Ask whether the screen is currently touched (or a mouse is pressed)
@@ -125,7 +131,7 @@ public class Drop extends ApplicationAdapter {
 			bird.y += 200 * Gdx.graphics.getDeltaTime();
 		}
 		
-		// Makes sure bucket stays within the screen limits!
+		// Makes sure bird stays within the screen limits!
 		if (bird.y < 0) {
 			bird.y = 0;
 		}
@@ -153,7 +159,19 @@ public class Drop extends ApplicationAdapter {
 	        	  iter.remove();
 	          }
 	          if(pipe.overlaps(bird)) {
-	        	  score+=1;
+	        	  score = 0;
+		    	  dropSound.play();
+		    	  iter.remove();
+		      }
+	       }
+	      for (Iterator<Rectangle> iter = collisionObject.iterator(); iter.hasNext(); ) {
+	          Rectangle collision = iter.next();
+	          collision.x -= 200 * Gdx.graphics.getDeltaTime();
+	          if(collision.x == 0) {
+	        	  iter.remove();
+	          }
+	          if(collision.overlaps(bird)) {
+	        	  score += 1;
 		    	  dropSound.play();
 		    	  iter.remove();
 		      }
@@ -163,12 +181,21 @@ public class Drop extends ApplicationAdapter {
 	// Spawns a pipe at the rightmost corner of the screen, at a random y position.
 	private void spawnPipe() {
 		Rectangle pipe = new Rectangle();
+		Rectangle collision = new Rectangle();
 		// random.nextInt(max - min) + min; 
-	    pipe.y = new Random().nextInt(0 - (-300)) + (-300) ;
+		int randomY = new Random().nextInt(0 - (-300)) + (-300);
+	    pipe.y = randomY;
 	    pipe.x = 810;
 	    pipe.width = 52;
 	    pipe.height = 320;
 	    pipes.add(pipe);
+		// random.nextInt(max - min) + min; 
+	    // this controls the object above the pipes that acts as collision detection
+	    collision.y = pipe.y + 320;
+	    collision.x = 810;
+	    collision.width = 52;
+	    collision.height = 320;
+	    collisionObject.add(collision);
 	    // Time used to decide whether to spawn a new pipe or not (yet)
 	    lastDropTime = TimeUtils.nanoTime();
 	}
