@@ -13,14 +13,16 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+
 import java.util.Iterator;
 import java.util.Random;
 
 public class Drop extends ApplicationAdapter {
 	private Texture pipeImage;
+	private Texture pipeFlipImage;
 	private Texture birdImage;
+	private Texture gapImage;
 	private Sound dropSound;
 	private Music rainMusic;
 	private OrthographicCamera camera;
@@ -30,8 +32,9 @@ public class Drop extends ApplicationAdapter {
 	private Vector3 touchPos;
 	//possible problem
 	private Array<Rectangle> pipes;
+	private Array<Rectangle> pipesFlipped;
 	//test
-	private Array<Rectangle> collisionObject;
+	private Array<Rectangle> gap;
 	private long lastDropTime;
 	
 	private long score;
@@ -43,6 +46,8 @@ public class Drop extends ApplicationAdapter {
 		  // the bird is 34x24 pixels
 		  // the pipe is 52x320 pixels
 	      pipeImage = new Texture(Gdx.files.internal("pipe-green.png"));
+	      pipeFlipImage = new Texture(Gdx.files.internal("pipe-green-flip.png"));
+	      gapImage = new Texture(Gdx.files.internal("gap.png"));
 	      birdImage = new Texture(Gdx.files.internal("yellowbird-midflap.png"));
 	      
 	      // load the drop sound effect and the rain background "music"
@@ -74,9 +79,9 @@ public class Drop extends ApplicationAdapter {
 	      
 	      // Spawn our first pipe
 	      pipes = new Array<Rectangle>();
-	      collisionObject = new Array<Rectangle>();
+	      gap = new Array<Rectangle>();
+	      pipesFlipped = new Array<Rectangle>();
 	      spawnPipe();
-	      
 	}
 
 	@Override
@@ -103,9 +108,12 @@ public class Drop extends ApplicationAdapter {
 		font.draw(batch, Long.toString(score), 25, 450);
 		for(Rectangle raindrop: pipes) {
 	    	batch.draw(pipeImage, raindrop.x, raindrop.y);
+		}
+		for(Rectangle raindrop: pipesFlipped) {
+	    	batch.draw(pipeFlipImage, raindrop.x,  raindrop.y);
 	    }
-		for (Rectangle collision: collisionObject) {
-			batch.draw(pipeImage, collision.x, collision.y);	
+		for (Rectangle collision: gap) {
+			batch.draw(gapImage, collision.x, collision.y);	
 		}
 		batch.end();
 		
@@ -157,6 +165,7 @@ public class Drop extends ApplicationAdapter {
 	          pipe.x -= 200 * Gdx.graphics.getDeltaTime();
 	          if(pipe.x == 0) {
 	        	  iter.remove();
+	        	  
 	          }
 	          if(pipe.overlaps(bird)) {
 	        	  score = 0;
@@ -164,7 +173,7 @@ public class Drop extends ApplicationAdapter {
 		    	  iter.remove();
 		      }
 	       }
-	      for (Iterator<Rectangle> iter = collisionObject.iterator(); iter.hasNext(); ) {
+	      for (Iterator<Rectangle> iter = gap.iterator(); iter.hasNext(); ) {
 	          Rectangle collision = iter.next();
 	          collision.x -= 200 * Gdx.graphics.getDeltaTime();
 	          if(collision.x == 0) {
@@ -176,26 +185,48 @@ public class Drop extends ApplicationAdapter {
 		    	  iter.remove();
 		      }
 	       }
+	      for (Iterator<Rectangle> iter = pipesFlipped.iterator(); iter.hasNext(); ) {
+	          Rectangle pipeFlip = iter.next();
+	          pipeFlip.x -= 200 * Gdx.graphics.getDeltaTime();
+	          if(pipeFlip.x == 0) {
+	        	  iter.remove();
+	          }
+	          if(pipeFlip.overlaps(bird)) {
+	        	  score = 0;
+		    	  dropSound.play();
+		    	  iter.remove();
+		      }
+	       }
+	      
 	}
 	
 	// Spawns a pipe at the rightmost corner of the screen, at a random y position.
 	private void spawnPipe() {
 		Rectangle pipe = new Rectangle();
 		Rectangle collision = new Rectangle();
+		Rectangle pipeFlip = new Rectangle();
 		// random.nextInt(max - min) + min; 
-		int randomY = new Random().nextInt(0 - (-300)) + (-300);
+		int randomY = new Random().nextInt(0 - (-280)) + (-300);
 	    pipe.y = randomY;
 	    pipe.x = 810;
 	    pipe.width = 52;
 	    pipe.height = 320;
 	    pipes.add(pipe);
 		// random.nextInt(max - min) + min; 
+	    
+	    // top pipe
+	    pipeFlip.y = pipe.y + 320 + 100;
+	    pipeFlip.x = 810;
+	    pipeFlip.width = 52;
+	    pipeFlip.height = 320;	    
+	    pipesFlipped.add(pipeFlip);	    
 	    // this controls the object above the pipes that acts as collision detection
 	    collision.y = pipe.y + 320;
 	    collision.x = 810;
 	    collision.width = 52;
-	    collision.height = 320;
-	    collisionObject.add(collision);
+	    collision.height = 100;
+	    gap.add(collision);
+	    
 	    // Time used to decide whether to spawn a new pipe or not (yet)
 	    lastDropTime = TimeUtils.nanoTime();
 	}
@@ -204,6 +235,7 @@ public class Drop extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		pipeImage.dispose();
+		pipeFlipImage.dispose();
 	    birdImage.dispose();
 	    dropSound.dispose();
 	    rainMusic.dispose();
