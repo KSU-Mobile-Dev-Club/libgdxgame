@@ -39,6 +39,8 @@ public class Drop extends ApplicationAdapter {
 	
 	private long score;
 	
+	private long current_time;
+	
 	
 	@Override
 	public void create() {
@@ -82,6 +84,7 @@ public class Drop extends ApplicationAdapter {
 	      gap = new Array<Rectangle>();
 	      pipesFlipped = new Array<Rectangle>();
 	      spawnPipe();
+//	      current_time = System.currentTimeMillis();
 	}
 
 	@Override
@@ -91,6 +94,12 @@ public class Drop extends ApplicationAdapter {
 		// Actually clears the screen
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		if (System.currentTimeMillis() > current_time + 2) {
+			Change_Displacement(2);
+			current_time = System.currentTimeMillis();
+		}
+		
+			
 		// Update the camera once per frame
 		camera.update();
 		
@@ -137,6 +146,9 @@ public class Drop extends ApplicationAdapter {
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			bird.y += 200 * Gdx.graphics.getDeltaTime();
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			bird.y += 5000 * Gdx.graphics.getDeltaTime();
 		}
 		
 		// Makes sure bird stays within the screen limits!
@@ -229,7 +241,16 @@ public class Drop extends ApplicationAdapter {
 	    
 	    // Time used to decide whether to spawn a new pipe or not (yet)
 	    lastDropTime = TimeUtils.nanoTime();
+	    
+	    
+	    
+	    
 	}
+	
+	private void Change_Displacement(int delta) {
+		bird.y -= delta;
+    }
+	
 	
 	// Clean up after the application is closed!
 	@Override
